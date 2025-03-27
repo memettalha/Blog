@@ -10,7 +10,7 @@ const Post = {
                     query.whereNull('deleted_at')
                  }else if(showDeleted === SHOW_DELETED.ONLY_DELETED){
                     query.whereNotNull('deleted_at')
-                 }else if(showDeleted !==){
+                 }else if(showDeleted !==SHOW_DELETED.TRUE){
                     query.whereNull('deleted_at')
                  }
                  if(category){

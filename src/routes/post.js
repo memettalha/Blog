@@ -44,7 +44,7 @@ router.put('/:id',async (req,res) => {
 
 router.delete('/:id',async, (req,res) => {
     try {
-        const deletedPost =await Post.delete(req.params.id)
+        const deletedPost = await Post.delete(req.params.id)
         res.status(202).json(deletedPost)
     } catch (error) {
         res.status(400).json({message:'Hata oldu tekrar deneyiniz'})
