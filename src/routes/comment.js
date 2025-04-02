@@ -1,6 +1,8 @@
-const express = require('express')
+import express from 'express'
+import Comment from '../models/comment'
 const router = express.Router()
 const Comment = require('../models/comment')
+
 
 router.get('/',async (req,res) =>{
     try {

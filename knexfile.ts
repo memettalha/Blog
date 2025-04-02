@@ -1,7 +1,9 @@
+import type { Knex } from "knex";
 import dotenv from 'dotenv';
+
 dotenv.config();
 
-export default {
+const config: { [key: string]: Knex.Config } = {
   development: {
     client: "pg",
     connection: {
@@ -20,4 +22,6 @@ export default {
       directory: "./src/database/migrations"
     }
   }
-}; 
+};
+
+export default config;

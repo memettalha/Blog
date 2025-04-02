@@ -1,7 +1,6 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const Post = require('../models/post')
-const { update } = require('../models/category')
+import Post from '../models/post'
 
 router.get('/',async (req,res) => {
     try {
@@ -42,7 +41,7 @@ router.put('/:id',async (req,res) => {
     }
 })
 
-router.delete('/:id',async, (req,res) => {
+router.delete('/:id',async(req,res) => {
     try {
         const deletedPost = await Post.delete(req.params.id)
         res.status(202).json(deletedPost)

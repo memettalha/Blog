@@ -1,6 +1,5 @@
-const { getById } = require('./category')
-const knex = require('./knex')
 const {SHOW_DELETED, POST_STATUS} = require('../const')
+import knex from 'knex'
 
 const Post = {
     getAll : (query_string) => {
