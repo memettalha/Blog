@@ -1,37 +1,75 @@
-import knex from '../database/index.js'
-import { SHOW_DELETED } from '../const.js'
+import db from '../database/index.js'
 
-interface Category {
-    getAll: (query: { showDeleted: string }) => Promise<any>;
-    getById: (id: number) => Promise<any>;
-    create: (category: any) => Promise<any>;
-    update: (id: number, category: any) => Promise<any>;
-    delete: (id: number) => Promise<any>;      
+export interface Category {
+    id: number;
+    name: string;
+    description?: string;
+    created_at: Date;
+    updated_at: Date;
+    deleted_at?: Date;
 }
 
-const Category: Category = {
-    getAll: async(query) => {
-        const {showDeleted} = query
-        if(showDeleted === SHOW_DELETED.TRUE){
-            return await knex('categories')
-        }else if(showDeleted === SHOW_DELETED.ONLY_DELETED){
-            return await knex('categories').whereNotNull('deleted_at')
-        }else{
-            return await knex('categories').whereNull('deleted_at')
+export interface CreateCategoryDTO {
+    name: string;
+    description?: string;
+}
+
+export interface UpdateCategoryDTO {
+    name?: string;
+    description?: string;
+}
+
+const Category = {
+    async getAll(showDeleted = false, onlyDeleted = false) {
+        let query = db('categories').select('*');
+        
+        if (!showDeleted) {
+            query = query.whereNull('deleted_at');
         }
+        
+        if (onlyDeleted) {
+            query = query.whereNotNull('deleted_at');
+        }
+        
+        return query;
     },
-    getById: async(id) => {
-        return await knex('categories').where({ id }).first()
+
+    async getById(id: number) {
+        return db('categories').where('id', id).first();
     },
-    create: async(category) => {
-        return await knex('categories').insert(category).returning('*')
+
+    async create(data: CreateCategoryDTO) {
+        const [category] = await db('categories')
+            .insert({
+                ...data,
+                created_at: new Date(),
+                updated_at: new Date()
+            })
+            .returning('*');
+        return category;
     },
-    update: async(id, category) => {
-        return await knex('categories').where({id}).update(category).returning('*')
+
+    async update(id: number, data: UpdateCategoryDTO) {
+        const [category] = await db('categories')
+            .where('id', id)
+            .update({
+                ...data,
+                updated_at: new Date()
+            })
+            .returning('*');
+        return category;
     },
-    delete: async(id) => {
-        return await knex('categories').where({id}).update({deleted_at: new Date()}).returning('*')
+
+    async delete(id: number) {
+        const [category] = await db('categories')
+            .where('id', id)
+            .update({
+                deleted_at: new Date(),
+                updated_at: new Date()
+            })
+            .returning('*');
+        return category;
     }
-}
+};
 
 export default Category

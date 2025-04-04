@@ -1,7 +1,6 @@
-import dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
 
-export default {
+module.exports = {
   development: {
     client: "pg",
     connection: {
@@ -9,7 +8,7 @@ export default {
       port: Number(process.env.DB_PORT) || 5432,
       user: process.env.DB_USER || "postgres",
       password: process.env.DB_PASSWORD || "postgres",
-      database: process.env.DB_NAME || "blog_db"
+      database: process.env.DB_NAME || "blog"
     },
     pool: {
       min: 2,
@@ -17,7 +16,7 @@ export default {
     },
     migrations: {
       tableName: "knex_migrations",
-      directory: "./src/database/migrations"
+      directory: "src/database/migrations"
     }
   }
 }; 
