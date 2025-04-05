@@ -1,6 +1,6 @@
 import db from '../database/index.js'
 
-export interface Category {
+interface Category {
     id: number;
     name: string;
     description?: string;
@@ -9,12 +9,12 @@ export interface Category {
     deleted_at?: Date;
 }
 
-export interface CreateCategoryDTO {
+interface CreateCategoryDTO {
     name: string;
     description?: string;
 }
 
-export interface UpdateCategoryDTO {
+interface UpdateCategoryDTO {
     name?: string;
     description?: string;
 }
@@ -25,26 +25,24 @@ const Category = {
         
         if (!showDeleted) {
             query = query.whereNull('deleted_at');
-        }
-        
-        if (onlyDeleted) {
+        } else if (onlyDeleted) {
             query = query.whereNotNull('deleted_at');
         }
         
-        return query;
+        return await query;
     },
 
     async getById(id: number) {
-        return db('categories').where('id', id).first();
+        const categories = await db('categories')
+            .select('*')
+            .where('id', id)
+            .whereNull('deleted_at');
+        return categories[0];
     },
 
     async create(data: CreateCategoryDTO) {
         const [category] = await db('categories')
-            .insert({
-                ...data,
-                created_at: new Date(),
-                updated_at: new Date()
-            })
+            .insert(data)
             .returning('*');
         return category;
     },
@@ -52,10 +50,8 @@ const Category = {
     async update(id: number, data: UpdateCategoryDTO) {
         const [category] = await db('categories')
             .where('id', id)
-            .update({
-                ...data,
-                updated_at: new Date()
-            })
+            .whereNull('deleted_at')
+            .update(data)
             .returning('*');
         return category;
     },
@@ -63,13 +59,12 @@ const Category = {
     async delete(id: number) {
         const [category] = await db('categories')
             .where('id', id)
-            .update({
-                deleted_at: new Date(),
-                updated_at: new Date()
-            })
+            .whereNull('deleted_at')
+            .update({ deleted_at: new Date() })
             .returning('*');
         return category;
     }
 };
 
+export type { Category, CreateCategoryDTO, UpdateCategoryDTO };
 export default Category

@@ -10,6 +10,8 @@ router.get('/',async (req,res) =>{
         res.json(Comments)
     } catch (error) {
         res.status(400).json({message: 'Hata oldu tekrar deneyiniz'})
+        console.log(error)
+        return
     }
 })
 
@@ -22,6 +24,8 @@ router.get('/:id',async (req,res)=>{
         res.json(Comments)
     } catch (error) {
         res.status(400).json({message: 'Hata oldu tekrar deneyiniz'})
+        console.log(error)
+        return
     }
 })
 
@@ -31,6 +35,8 @@ router.post('/',async (req,res) => {
         res.status(201).json(newComment)
     } catch (error) {
         res.status(400).json({message: 'Hata oldu tekrar deneyiniz'})
+        console.log(error)
+        return
     }
 })
 
@@ -40,6 +46,8 @@ router.put('/:id',async (req,res) => {
         res.status(201).json(updatedComment)
     } catch (error) {
         res.status(400).json({message: 'Hata oldu tekrar deneyiniz'})
+        console.log(error)
+        return
     }
 })
 
@@ -49,5 +57,7 @@ router.delete('/:id',async (req,res) => {
         res.status(202).json(deletedComment)
     } catch (error) {
         res.status(400).json({message: 'Hata oldu tekrar deneyiniz'})
+        console.log(error)
+        return
     }
 })
